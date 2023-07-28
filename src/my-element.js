@@ -41,11 +41,11 @@ export class LoginButton extends LitElement {
       const account = accounts[0]
       const signer = extension.signer
       const cert = await signCertificate({ api: apiPromise, signer, account })
-      const contractId = '0xc111903770fd1072cb36c56435f2abc9f5d0cc144e557b1e85800e40e87e0ed6'
+      const contractId = '0x845dea27f7984ff19b6db5f78550da6e4299665b3a02b15f6e0132956136f50d'
       const phatRegistry = await OnChainRegistry.create(apiPromise)
       const contractKey = await phatRegistry.getContractKeyOrFail(contractId)
       const contractPromise = new PinkContractPromise(apiPromise, phatRegistry, abi, contractId, contractKey)
-      const r = await contractPromise.query.createToken(cert.address, { cert }, cert.address)
+      const r = await contractPromise.query.createToken(cert.address, { cert })
       if (!r.output || !r.output.isOk) {
         console.log('error', r)
       } else {

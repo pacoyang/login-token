@@ -16,7 +16,7 @@ const verifyToken = async (token, address) => {
     provider: new WsProvider('wss://poc5.phala.network/ws'),
     noInitWarn: true,
   }))
-  const contractId = '0xc111903770fd1072cb36c56435f2abc9f5d0cc144e557b1e85800e40e87e0ed6'
+  const contractId = '0x845dea27f7984ff19b6db5f78550da6e4299665b3a02b15f6e0132956136f50d'
   const phatRegistry = await OnChainRegistry.create(apiPromise)
   const contractKey = await phatRegistry.getContractKeyOrFail(contractId)
   const contractPromise = new PinkContractPromise(apiPromise, phatRegistry, abi, contractId, contractKey)

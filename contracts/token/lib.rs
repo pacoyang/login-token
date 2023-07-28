@@ -65,16 +65,23 @@ mod token {
         }
 
         #[ink(message)]
-        pub fn create_token(&self, address: String) -> String {
-            let signature_bytes = self.hmac_sign(self.secret_key.as_bytes(), address.as_bytes());
-            let signature = base16::encode_lower(&signature_bytes);
-            signature
+        pub fn create_token(&self) -> String {
+            self.create_signature(self.env().caller())
         }
 
         #[ink(message)]
-        pub fn verify_token(&self, token: String, address: String) -> bool {
-            let signature = self.create_token(address);
+        pub fn verify_token(&self, token: String, account_id: AccountId) -> bool {
+            let signature = self.create_signature(account_id);
             signature == token
+        }
+
+        fn create_signature(&self, account_id: AccountId) -> String {
+            let signature_bytes = self.hmac_sign(
+                self.secret_key.as_bytes(),
+                account_id.encode().as_slice(),
+            );
+            let signature = base16::encode_lower(&signature_bytes);
+            signature
         }
 
         fn hmac_sign(&self, key: &[u8], msg: &[u8]) -> Vec<u8> {
@@ -93,9 +100,9 @@ mod token {
         #[ink::test]
         fn it_works() {
             let instance = Token::new(String::from("secret_key"));
-            let address = String::from("43c3KZTjXFk7feJhgVym4ek6WDr3MzJhQsgkTK1NpgvSRs7j");
-            let token = instance.create_token(address.clone());
-            assert!(instance.verify_token(token, address));
+            let account_id = AccountId::from([1u8; 32]);
+            let token = instance.create_signature(account_id);
+            assert!(instance.verify_token(token, account_id));
         }
     }
 }

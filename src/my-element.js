@@ -36,7 +36,7 @@ export class LoginButton extends LitElement {
       }))
       const provider = 'polkadot-js'
       const injector = window.injectedWeb3[provider]
-      const extension = await injector.enable('Smart Cookies')
+      const extension = await injector.enable('Login Token')
       const accounts = await extension.accounts.get(true)
       const account = accounts[0]
       const signer = extension.signer
